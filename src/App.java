@@ -2,17 +2,12 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class App {
-  private static Builder newBuilder;
-  private static CompletableFuture<HttpResponse<String>> result;
-  private static String body;
-  private static String formatTitle;
 
   public static void main(String[] args) throws Exception {
 
