@@ -13,6 +13,7 @@ public class App {
     private static Builder newBuilder;
     private static CompletableFuture<HttpResponse<String>> result;
     private static String body;
+    private static String formatTitle;
 
     public static void main(String[] args) throws Exception {
 
@@ -31,11 +32,28 @@ public class App {
         var parser = new JsonParser();
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
 
-        listaDeFilmes.forEach(System.out::println);
-
         // exibir e manipular os dados
+        for (Map<String,String> filme : listaDeFilmes) {
+          var title = filme.get("title");
+          var image = filme.get("image");
+          var imDbRating = Double.parseDouble(filme.get("imDbRating"));
+          
+          var formatTitle = String.format("Título: \u001b[1m%s\u001b[m", title);
+          var formatImage = String.format("Poster: \u001b[3m%s\u001b[m", image);
+          var rating = String.format("\u001b[36;1mClassificação: \u001b[1m%.1f\u001b[m", imDbRating);
+          var stars = "";
+          for (int i = 1; i <= imDbRating; i++) {
+            stars += "\u2b50";
+          }
 
-        
+          System.out.println(formatTitle);
+          System.out.println(formatImage);
+          System.out.println(rating);
+          System.out.println(stars);
+
+          System.out.println();
+        }
 
     }
+
 }
