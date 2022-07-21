@@ -4,8 +4,6 @@ import java.util.List;
 
 public class App {
 
-  private static String urlImagem;
-
   public static void main(String[] args) throws Exception {
 
     String url = "https://api.mocki.io/v2/549a5d8b";
