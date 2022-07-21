@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -25,9 +27,14 @@ public class App {
     // extrair só os dados que interessam (título, poster, classificação)
     var parser = new JsonParser();
     List<Map<String, String>> listaDeFilmes = parser.parse(body);
+    GeradorDeStickers geradorDeStickers = new GeradorDeStickers();
 
     // exibir e manipular os dados
     for (Map<String, String> filme : listaDeFilmes) {
+      String urlImage = filme.get("image");
+      InputStream inputStream = new URL(urlImage).openStream();
+      String nomeArquivo = filme.get("title") + ".png";
+      geradorDeStickers.gerarSticker(inputStream, nomeArquivo, "Só filme TOPZERA");
       System.out.println(formatOutput(filme));
 
       System.out.println();
@@ -36,6 +43,7 @@ public class App {
   }
 
   private static String formatOutput(Map<String, String> filme) {
+
     var title = filme.get("title");
     var image = filme.get("image");
     var imDbRating = Double.parseDouble(filme.get("imDbRating"));
