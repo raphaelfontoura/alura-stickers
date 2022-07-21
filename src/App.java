@@ -1,64 +1,29 @@
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class App {
 
+  private static String urlImagem;
+
   public static void main(String[] args) throws Exception {
 
-    // recuperar os dados do imdb-api.com com os top 250 filmes
     String url = "https://api.mocki.io/v2/549a5d8b";
 
-    URI uri = new URI(url);
+    var httpClient = new ClienteHttp();
+    String json = httpClient.buscaDados(url);
 
-    HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder(uri).build();
-    CompletableFuture<HttpResponse<String>> result = client.sendAsync(request, BodyHandlers.ofString());
+    ExtratorConteudo extratorFilmes = new ExtratorDeConteudoIMDB();
+    List<Conteudo> conteudosFilmes = extratorFilmes.extraiConteudos(json);
 
-    String body = result.get().body();
-
-    // extrair só os dados que interessam (título, poster, classificação)
-    var parser = new JsonParser();
-    List<Map<String, String>> listaDeFilmes = parser.parse(body);
     GeradorDeStickers geradorDeStickers = new GeradorDeStickers();
 
-    // exibir e manipular os dados
-    for (Map<String, String> filme : listaDeFilmes) {
-      String urlImage = filme.get("image");
-      InputStream inputStream = new URL(urlImage).openStream();
-      String nomeArquivo = filme.get("title") + ".png";
+    for (Conteudo item : conteudosFilmes) {
+      InputStream inputStream = new URL(item.getUrlImagem()).openStream();
+      String nomeArquivo = item.getTitulo() + ".png";
       geradorDeStickers.gerarSticker(inputStream, nomeArquivo, "Só Filme TOPZERA!!");
-      System.out.println(formatOutput(filme));
-
-      System.out.println();
+      System.out.println(item);
     }
-
-  }
-
-  private static String formatOutput(Map<String, String> filme) {
-
-    var title = filme.get("title");
-    var image = filme.get("image");
-    var imDbRating = Double.parseDouble(filme.get("imDbRating"));
-    var stars = "";
-    for (int i = 1; i <= imDbRating; i++) {
-      stars += "\u2b50";
-    }
-
-    String result = "";
-    result += String.format("Título: \u001b[1m%s\u001b[m", title) + System.lineSeparator();
-    result += String.format("Poster: \u001b[3m%s\u001b[m", image) + System.lineSeparator();
-    result += String.format("\u001b[36;1mClassificação: \u001b[1m%.1f\u001b[m", imDbRating) + System.lineSeparator();
-    result += stars;
-
-    return result;
 
   }
 
