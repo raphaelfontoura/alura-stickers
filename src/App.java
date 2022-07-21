@@ -34,7 +34,7 @@ public class App {
       String urlImage = filme.get("image");
       InputStream inputStream = new URL(urlImage).openStream();
       String nomeArquivo = filme.get("title") + ".png";
-      geradorDeStickers.gerarSticker(inputStream, nomeArquivo, "Só filme TOPZERA");
+      geradorDeStickers.gerarSticker(inputStream, nomeArquivo, "Só Filme TOPZERA!!");
       System.out.println(formatOutput(filme));
 
       System.out.println();
@@ -48,9 +48,9 @@ public class App {
     var image = filme.get("image");
     var imDbRating = Double.parseDouble(filme.get("imDbRating"));
     var stars = "";
-      for (int i = 1; i <= imDbRating; i++) {
-        stars += "\u2b50";
-      }
+    for (int i = 1; i <= imDbRating; i++) {
+      stars += "\u2b50";
+    }
 
     String result = "";
     result += String.format("Título: \u001b[1m%s\u001b[m", title) + System.lineSeparator();
@@ -59,7 +59,7 @@ public class App {
     result += stars;
 
     return result;
-    
+
   }
 
 }
